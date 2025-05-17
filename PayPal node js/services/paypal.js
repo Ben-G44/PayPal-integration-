@@ -59,3 +59,17 @@ exports.createOrder = async () => {
   })
   return response.data.links.find(link => link.rel === 'approve').href
 }
+exports.capturePayment = async (orderId) => {
+    const accessToken = await generateAccessToken()
+
+    const response = await axios({
+        url: process.env.PAYPAL_BASE_URL + `/v2/checkout/orders/${orderId}/capture`,
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + accessToken
+        }
+    })
+
+    return response.data
+}
